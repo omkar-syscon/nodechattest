@@ -90,7 +90,7 @@ const server = app.listen(PORT, () => {
 // Initialize Socket.IO
 const io = socketIO(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://chattest-kappa.vercel.app",
     methods: ["GET", "POST"]
   }
 });
