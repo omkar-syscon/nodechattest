@@ -101,14 +101,25 @@ io.on('connection', (socket) => {
 
   socket.on('disconnect', () => {
     console.log('User disconnected');
+    // Remove the disconnected user from userSocketMap
+    for (const [userId, socketId] of Object.entries(userSocketMap)) {
+      if (socketId === socket.id) {
+        delete userSocketMap[userId];
+        break;
+      }
+    }
   });
 
   socket.on('send message', (message) => {
-    // Assuming messageData contains {senderId, receiverId, message}
     const receiverSocketId = userSocketMap[message.receiverId];
     if (receiverSocketId) {
-      // Send to specific user
       io.to(receiverSocketId).emit('receive message', message);
     }
+  });
+
+  // Add the connected user to userSocketMap
+  socket.on('user connected', (userId) => {
+    console.log('User connected with ID:', userId);
+    userSocketMap[userId] = socket.id;
   });
 });
